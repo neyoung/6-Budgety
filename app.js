@@ -201,7 +201,6 @@ var UIController = (function() {
       newHtml = html.replace('%id%', obj.id);
       newHtml = newHtml.replace('%description%', obj.description);
       newHtml = newHtml.replace('%value%', obj.value);
-      // newHtml = newHtml.replace('%percentage%', obj.percentage);
 
       // Insert the HTML into the DOM
       document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
@@ -238,8 +237,25 @@ var UIController = (function() {
       }
     },
 
-    displayPercentages: function(p) {
-      console.log(p);
+    displayPercentages: function(percentages) {
+      console.log(percentages);
+      var fields = document.querySelectorAll(DOMstrings.expensesPercLabel);
+
+      var nodeListForEach = function(list, callback) {
+          for(var i=0; i<list.length; i++) {
+            callback(list[i], i);
+          }
+      };
+
+      nodeListForEach(fields, function(current, index) {
+        console.log(current.percentage);
+        if(percentages[index] > 0) {
+          current.textContent = percentages[index] + '%';
+        } else {
+          current.textContent = '---';
+        }
+
+      });
     },
 
     getDOMstrings: function() {
@@ -300,8 +316,7 @@ var controller = (function(budgetCtrl, UICtrl) {
     // 2. Read percentages from the budget controller
     var percentages = budgetCtrl.getPercentages();
     // 3. Update percentages in the UI
-    UICtrl.displayPercentages(percentages);book
-
+    UICtrl.displayPercentages(percentages);
   };
 
   var ctrlDeleteItem = function(event) {
