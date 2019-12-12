@@ -157,6 +157,12 @@ var UIController = (function() {
     dateLabel: '.budget__title--month'
   };
 
+  var nodeListForEach = function(list, callback) {
+      for(var i=0; i<list.length; i++) {
+        callback(list[i], i);
+      }
+  };
+
   var formatNumber = function(num, type) {
     var numSplit, int, dec, type;
 
@@ -249,17 +255,9 @@ var UIController = (function() {
     },
 
     displayPercentages: function(percentages) {
-      console.log(percentages);
       var fields = document.querySelectorAll(DOMstrings.expensesPercLabel);
 
-      var nodeListForEach = function(list, callback) {
-          for(var i=0; i<list.length; i++) {
-            callback(list[i], i);
-          }
-      };
-
       nodeListForEach(fields, function(current, index) {
-        console.log(current.percentage);
         if(percentages[index] > 0) {
           current.textContent = percentages[index] + '%';
         } else {
@@ -267,6 +265,19 @@ var UIController = (function() {
         }
 
       });
+    },
+
+    changeType: function() {
+      var fields = document.querySelectorAll(
+        DOMstrings.inputType + ', ' +
+        DOMstrings.inputDescription + ', ' +
+        DOMstrings.inputValue);
+
+      nodeListForEach(fields, function(cur) {
+        cur.classList.toggle('red-focus');
+      });
+
+      document.querySelector(DOMstrings.inputBtn).classList.toggle('red');
     },
 
     getDOMstrings: function() {
@@ -290,6 +301,8 @@ var controller = (function(budgetCtrl, UICtrl) {
       }
     });
     document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem); // delete button function
+    // Changes the outline of the input fields and button to red when entering an expense
+    document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changeType);
   };
 
   var ctrlAddItem = function() {
